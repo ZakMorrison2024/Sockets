@@ -8,4 +8,4 @@ def check_client_timeout(client_socket, client_address): # Test for time out
          no_of_clients -= 1
          return False
       if True:
-            start_client_timer(dt+120,client_socket, client_address)
+            start_client_timer(delta_time+120,client_socket, client_address)
