@@ -12,7 +12,7 @@ def recv_message(message): # recieved message
                     network_action(int(message))
                   
     except Exception as e:
-       send_message(My_IP + " | 404: Didn't get any message.")
+       send_message(My_IP + " | "+ datetime +" | 404: Didn't get any message.")
        return "Error: Unable to recieve data from server."
     except BlockingIOError:
        sock.setblocking(0)# stop blocking
