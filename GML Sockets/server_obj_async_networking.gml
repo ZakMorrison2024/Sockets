@@ -7,7 +7,7 @@ switch(type_event) // Server Event Switch Statement
 		
 		// Case Connection Established
 				//collect socket
-
+				
 				var socket = ds_map_find_value(async_load,"socket"); // Add Socket
 				ds_list_add(list,"socket"); // Add to External Socket Reference
 
@@ -22,24 +22,38 @@ switch(type_event) // Server Event Switch Statement
 				//find client from map
 				var current_client_id = client_map[? string(socket)].client_id; // Find Speific Player in Reference
 
+				if client_map[? socket].client_id != current_client_id
+					{
 				//send socket basic data
 				buffer_seek(server_buffer,buffer_seek_start,0); // Reset Buffer
 				buffer_write(server_buffer,buffer_string,"client_join"); // Write Client Response Case to Buffer
-				buffer_write(server_buffer,buffer_u8,current_client_id); // Write Current Client Reference to Buffer
+				buffer_write(server_buffer,buffer_u8,client_map[? socket].client_id); // Write Current Client Reference to Buffer
 				network_send_packet(server_socket,server_buffer,buffer_tell(server_buffer)); // Send Buffer over TCP
-				
+					}
+					
+				if client_map[? socket].client_id == current_client_id
+					{	
+				buffer_seek(server_buffer,buffer_seek_start,0); // Reset Buffer
+				buffer_write(server_buffer,buffer_string,"just_join"); 
+				buffer_write(server_buffer,buffer_u8,current_client_id); // Write Current Client Reference to Buffer
+				buffer_write(server_buffer,buffer_u8,no_of_clients)
+					}
+					
 				no_of_clients ++;
+				
 				break;
 
 		case network_type_disconnect: // Case Connection Disconnected
 					socket = ds_map_find_value(async_load,"socket"); // Finding Socket
 					current_client_id = client_map[? string(socket)].client_id; // Finding Disconnected Player ID
 
-					if client_map[? socket_id].client_id != current_client_id
+					if client_map[? socket].client_id != current_client_id
 					{
 					buffer_seek(server_buffer,buffer_seek_start,0); // Reset Buffer
 					buffer_write(server_buffer,buffer_string,"client_disconnected");
-					buffer_write(server_buffer, buffer_u16,current_client_id)
+					buffer_write(server_buffer, buffer_u8,client_map[? socket].client_id)
+					buffer_write(server_buffer, buffer_u8,current_client_id)
+					
 					network_send_packet(server_socket,server_buffer,buffer_tell(server_buffer));
 					}
 
@@ -61,8 +75,8 @@ switch(type_event) // Server Event Switch Statement
 
 	case network_type_data: // Case Data Transfer 
 		var client_socket, client
-		client_socket = ds_map_find_value(async_load,"id"); // Find Socket
-		client = client_map[? string(socket)].client_id
+		client_socket = ds_map_find_value(async_load,"socket"); // Find Socket
+		client = client_map[? string(client_socket)].client_id
 		server_handle_message(server_buffer, server_socket, client_socket, client); // External Script 
 	break;
 }
