@@ -27,7 +27,7 @@ switch(type_event) // Server Event Switch Statement
 				//send socket basic data
 				buffer_seek(server_buffer,buffer_seek_start,0); // Reset Buffer
 				buffer_write(server_buffer,buffer_string,"client_join"); // Write Client Response Case to Buffer
-				buffer_write(server_buffer,buffer_u8,client_map[? socket].client_id); // Write Current Client Reference to Buffer
+				buffer_write(server_buffer,buffer_u8,current_client_id); // Write Current Client Reference to Buffer
 				network_send_packet(server_socket,server_buffer,buffer_tell(server_buffer)); // Send Buffer over TCP
 					}
 					
@@ -50,8 +50,7 @@ switch(type_event) // Server Event Switch Statement
 					if client_map[? socket].client_id != current_client_id
 					{
 					buffer_seek(server_buffer,buffer_seek_start,0); // Reset Buffer
-					buffer_write(server_buffer,buffer_string,"client_disconnected");
-					buffer_write(server_buffer, buffer_u8,client_map[? socket].client_id)
+					buffer_write(server_buffer,buffer_string,"client_disconnected")
 					buffer_write(server_buffer, buffer_u8,current_client_id)
 					
 					network_send_packet(server_socket,server_buffer,buffer_tell(server_buffer));
