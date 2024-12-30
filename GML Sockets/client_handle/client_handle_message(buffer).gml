@@ -8,6 +8,11 @@ while(true)
 	switch(message_id)
 	{
 		
+			case "just_join": // client join
+				global.player = buffer_read(buffer,buffer_u8);
+				
+			break;
+		
 			case "client_join": // client join
 				client_peer_map[? client_id] = instance_create_depth(0,0,0,obj_client_peer);
 				client_peer_map[? client_id].client_id = client_id;
